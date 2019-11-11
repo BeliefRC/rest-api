@@ -8,6 +8,6 @@ const userSchema = new Schema({
   age: { type: Number, default: 0, required: false },
 })
 
-/** @class User */
-const userModel = model('User', userSchema)
-module.exports = userModel
+const User = model('User', userSchema)
+module.exports = {User}
+

@@ -13,12 +13,11 @@ mongoose.connect(connectionStr,
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
-  },
-  () => {
-    logger.info('MongoDB connect success!')
-    console.log('MongoDB connect success!')
-  })
-mongoose.connection.on('error', error => {
+  }
+).then(() => {
+  logger.info('MongoDB connect success!')
+  console.log('MongoDB connect success!')
+}).catch(error => {
   logger.error(error)
   console.error(error)
 })
