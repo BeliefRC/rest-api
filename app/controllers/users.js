@@ -8,7 +8,9 @@ class UsersCtl {
   }
 
   async findById (ctx) {
-    const user = await User.findById(ctx.params.id)
+    const { fields = '' } = ctx.query
+    const selectFields = fields.split(';').filter(f => f).map(f => ` +${f}`).join('')
+    const user = await User.findById(ctx.params.id).select(selectFields)
     if (!user) {
       ctx.throw(404, `user isn't existed`)
     } else {
@@ -72,6 +74,43 @@ class UsersCtl {
       const { _id, name } = user
       const token = jsonwebtoken.sign({ _id, name }, secret, { expiresIn: '1d' })
       ctx.body = { token }
+    }
+  }
+
+  async listFollowing (ctx) {
+    const user = await User.findById(ctx.params.id).select('+following').populate('following')
+    if (!user) {
+      ctx.throw(404)
+    }
+    ctx.body = user.following
+  }
+
+
+  async listFollowers (ctx) {
+    ctx.body = await User.find({ following: ctx.params.id })
+  }
+
+  async follow (ctx) {
+    const followId=ctx.params.id
+    const me = await User.findById(ctx.state.user._id).select('+following')
+    if (!me.following.map(id => id.toString()).includes(followId)) {
+      me.following.push(followId)
+      me.save()
+      ctx.status = 204
+    } else {
+      ctx.throw(409, 'You are already following this user')
+    }
+  }
+  async unFollow (ctx) {
+    const followId=ctx.params.id
+    const me = await User.findById(ctx.state.user._id).select('+following')
+    const index=me.following.map(id => id.toString()).indexOf(followId)
+    if (index>-1) {
+      me.following.splice(index,1)
+      me.save()
+      ctx.status = 204
+    } else {
+      ctx.throw(409, 'You are already unfollowing this user')
     }
   }
 }

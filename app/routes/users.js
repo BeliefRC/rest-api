@@ -10,4 +10,8 @@ router.get('/:id', usersCtl.findById)
 router.patch('/:id', auth, usersCtl.checkOwner, usersCtl.update)
 router.delete('/:id', auth, usersCtl.checkOwner, usersCtl.delete)
 router.post('/login', usersCtl.login)
+router.get('/:id/following', usersCtl.listFollowing)
+router.get('/:id/followers', usersCtl.listFollowers)
+router.put('/following/:id', auth, usersCtl.follow)
+router.delete('/following/:id', auth, usersCtl.unFollow)
 module.exports = router
