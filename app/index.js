@@ -1,14 +1,15 @@
 const path = require('path')
 const Koa = require('koa')
 const mongoose = require('mongoose')
-const logger = require('./utils/logger')
 const koaBody = require('koa-body')
 const koaStatic = require('koa-static')
 const error = require('koa-json-error')
 const parameter = require('koa-parameter')
-const app = new Koa()
+const koaLogger = require('koa-logger')
+const logger = require('./utils/logger')
 const routesMap = require('./routes')
-const { connectionStr } = require('./config')
+const { connectionStr } = require('./config/baseConfig')
+const app = new Koa()
 
 mongoose.connect(connectionStr,
   {
@@ -24,6 +25,7 @@ mongoose.connect(connectionStr,
   console.error(JSON.stringify(error, null, 4))
 })
 
+app.use(koaLogger())
 app.use(koaStatic(path.join(__dirname, 'public')))
 app.use(error({
   postFormat: (e, { stack, ...rest }) => {

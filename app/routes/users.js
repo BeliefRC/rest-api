@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 const jwt = require('koa-jwt')
-const { secret } = require('../config')
+const { secret } = require('../config/baseConfig')
 const router = new Router({ prefix: '/users' })
 const usersCtl = require('../controllers/users')
 const auth = jwt({ secret })

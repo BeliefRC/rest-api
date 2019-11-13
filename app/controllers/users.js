@@ -1,10 +1,15 @@
 const jsonwebtoken = require('jsonwebtoken')
 const { User } = require('../models/users')
-const { secret } = require('../config')
+const { secret } = require('../config/baseConfig')
 
 class UsersCtl {
   async find (ctx) {
+    let { pageSize = 10 } = ctx.query
+    const pageNum = Math.max(ctx.query.pageNum, 1) - 1
+    pageSize = Math.max(pageSize, 1)
     ctx.body = await User.find()
+      .find({ name: new RegExp(ctx.query.q) })
+      .limit(pageSize).skip(pageNum * pageSize)
   }
 
   async findById (ctx) {
@@ -85,13 +90,12 @@ class UsersCtl {
     ctx.body = user.following
   }
 
-
   async listFollowers (ctx) {
     ctx.body = await User.find({ following: ctx.params.id })
   }
 
   async follow (ctx) {
-    const followId=ctx.params.id
+    const followId = ctx.params.id
     const me = await User.findById(ctx.state.user._id).select('+following')
     if (!me.following.map(id => id.toString()).includes(followId)) {
       me.following.push(followId)
@@ -101,12 +105,13 @@ class UsersCtl {
       ctx.throw(409, 'You are already following this user')
     }
   }
+
   async unFollow (ctx) {
-    const followId=ctx.params.id
+    const followId = ctx.params.id
     const me = await User.findById(ctx.state.user._id).select('+following')
-    const index=me.following.map(id => id.toString()).indexOf(followId)
-    if (index>-1) {
-      me.following.splice(index,1)
+    const index = me.following.map(id => id.toString()).indexOf(followId)
+    if (index > -1) {
+      me.following.splice(index, 1)
       me.save()
       ctx.status = 204
     } else {
