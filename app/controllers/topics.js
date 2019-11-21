@@ -1,5 +1,6 @@
-const { Topic } = require('../models/topics')
-const { User } = require('../models/users')
+const Topic = require('../models/topics')
+const User = require('../models/users')
+const Question = require('../models/questions')
 
 class TopicsCtl {
   async find (ctx) {
@@ -41,8 +42,20 @@ class TopicsCtl {
     ctx.body = await Topic.findByIdAndUpdate(ctx.params.id, ctx.request.body, { new: true })
   }
 
-  async listFollowers (ctx) {
+  async listTopicFollowers (ctx) {
+    let { pageSize = 10 } = ctx.query
+    const pageNum = Math.max(ctx.query.pageNum, 1) - 1
+    pageSize = Math.max(pageSize, 1)
     ctx.body = await User.find({ followingTopics: ctx.params.id })
+      .limit(pageSize).skip(pageNum * pageSize)
+  }
+
+  async listQuestions (ctx) {
+    let { pageSize = 10 } = ctx.query
+    const pageNum = Math.max(ctx.query.pageNum, 1) - 1
+    pageSize = Math.max(pageSize, 1)
+    ctx.body = await Question.find({ topics: ctx.params.id })
+      .limit(pageSize).skip(pageNum * pageSize)
   }
 
 }

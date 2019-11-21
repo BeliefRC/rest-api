@@ -1,4 +1,5 @@
-const path=require('path')
+const path = require('path')
+
 class HomeCtl {
   index (ctx) {
     ctx.body = 'home'
@@ -6,7 +7,7 @@ class HomeCtl {
 
   upload (ctx) {
     const file = ctx.request.files.file
-    const basename=path.basename(file.path)
+    const basename = path.basename(file.path)
     ctx.body = { path: `${ctx.origin}/uploads/${basename}` }
   }
 }

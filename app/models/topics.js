@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const { Schema, model } = mongoose
+const { Schema } = mongoose
 
 const topicSchema = new Schema({
   __v: { type: Number, select: false },
@@ -8,5 +8,5 @@ const topicSchema = new Schema({
   avatar_url: { type: String },
   introduction: { type: String, select: false },
 }, { timestamps: true })
-const Topic = model('Topic', topicSchema)
-module.exports = { Topic }
+const Topic = mongoose.model('Topic', topicSchema)
+module.exports = Topic

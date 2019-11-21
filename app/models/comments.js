@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-const { Schema, model } = mongoose;
+const { Schema } = mongoose
 const commentSchema = new Schema({
   __v: { type: Number, select: false },
   content: { type: String, required: true },
@@ -9,6 +9,6 @@ const commentSchema = new Schema({
   answerId: { type: String, required: true },
   rootCommentId: { type: String },
   replyTo: { type: Schema.Types.ObjectId, ref: 'User' },
-}, { timestamps: true });
-
-module.exports = model('Comment', commentSchema);
+}, { timestamps: true })
+const Comment = mongoose.model('Comment', commentSchema)
+module.exports = Comment
