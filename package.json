@@ -5,7 +5,11 @@
   "main": "app/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node app/index.js",
-    "dev": "nodemon app/index.js"
+    "dev": "nodemon app/index.js",
+    "pm2:log": "pm2 log app",
+    "pm2:start": "cross-env NODE_ENV=production pm2 start app --update-env",
+    "pm2:stop": "pm2 stop app",
+    "pm2:restart": "cross-env NODE_ENV=production pm2 restart app --update-env --log-date-format \"YYYY-MM-DD HH:MM:SS\""
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +29,7 @@
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "pm2": "^4.1.2"
   }
 }
