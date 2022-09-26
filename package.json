@@ -30,6 +30,6 @@
   "devDependencies": {
     "cross-env": "^6.0.3",
     "nodemon": "^1.19.4",
-    "pm2": "^4.1.2"
+    "pm2": "^5.2.0"
   }
 }
